@@ -1,0 +1,30 @@
+name: Node.js CI (24/7 Run)
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 */6 * * *'  # Har 6 ghantay baad auto-restart
+  workflow_dispatch:      # Takay tum khud bhi button daba kar start kar sako
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20' # 24.x abhi stable nahi hai bots ke liye, 20 best hai
+        check-latest: true
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Start application
+      run: npm start
+      timeout-minutes: 350 # Ye step bot ko 5 ghantay 50 min tak chalne dega
